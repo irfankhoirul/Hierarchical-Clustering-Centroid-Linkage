@@ -8,15 +8,25 @@ import java.util.List;
  */
 public class Node {
     private int id;
-    private double v;
-    private double w;
-    private double x;
-    private double y;
-    private double z;
+    //    private double v;
+//    private double w;
+//    private double x;
+//    private double y;
+//    private double z;
+    private double[] value;
     private List<Node> clusterMembers = new ArrayList<>();
     private int cluster;
 
-    public Node() {
+    public Node(int dimen) {
+        value = new double[dimen];
+    }
+
+    public double[] getValue() {
+        return value;
+    }
+
+    public void setValue(double[] value) {
+        this.value = value;
     }
 
     public int getId() {
@@ -28,45 +38,45 @@ public class Node {
     }
 
 
-    public double getV() {
-        return v;
-    }
+//    public double getV() {
+//        return v;
+//    }
+//
+//    public void setV(double v) {
+//        this.v = v;
+//    }
+//
+//    public double getW() {
+//        return w;
+//    }
+//
+//    public void setW(double w) {
+//        this.w = w;
+//    }
 
-    public void setV(double v) {
-        this.v = v;
-    }
-
-    public double getW() {
-        return w;
-    }
-
-    public void setW(double w) {
-        this.w = w;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public double getZ() {
-        return z;
-    }
-
-    public void setZ(double z) {
-        this.z = z;
-    }
+//    public double getX() {
+//        return x;
+//    }
+//
+//    public void setX(double x) {
+//        this.x = x;
+//    }
+//
+//    public double getY() {
+//        return y;
+//    }
+//
+//    public void setY(double y) {
+//        this.y = y;
+//    }
+//
+//    public double getZ() {
+//        return z;
+//    }
+//
+//    public void setZ(double z) {
+//        this.z = z;
+//    }
 
     public List<Node> getClusterMembers() {
         return clusterMembers;
@@ -86,28 +96,48 @@ public class Node {
 
     @Override
     public String toString() {
-        return "Node{" +
-                "id=" + id +
-                ", v=" + v +
-                ", w=" + w +
-                ", x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                ", clusterMembersSize=" + clusterMembers.size() +
+        String s = "Node{" +
+                "id=" + id;
+        for (int i = 0; i < value.length; i++) {
+            s += ", value[" + i + "]=" + value[i];
+        }
+        s += ", clusterMembersSize=" + clusterMembers.size() +
                 ", cluster=" + cluster +
                 '}';
+        return s;
+
+//        return "Node{" +
+//                "id=" + id +
+//                ", value[0]=" + v +
+//                ", value[1]=" + w +
+//                ", x=" + x +
+//                ", y=" + y +
+//                ", z=" + z +
+//                ", clusterMembersSize=" + clusterMembers.size() +
+//                ", cluster=" + cluster +
+//                '}';
     }
 
     public String toString(int index) {
-        return "Node:" + index + " {" +
-                "id=" + id +
-                ", v=" + v +
-                ", w=" + w +
-                ", x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                ", clusterMembersSize=" + clusterMembers.size() +
+        String s = "Node:" + index + " {" +
+                "id=" + id;
+        for (int i = 0; i < value.length; i++) {
+            s += ", value[" + i + "]=" + value[i];
+        }
+        s += ", clusterMembersSize=" + clusterMembers.size() +
                 ", cluster=" + cluster +
                 '}';
+        return s;
+
+//        return "Node:" + index + " {" +
+//                "id=" + id +
+//                ", v=" + v +
+//                ", w=" + w +
+//                ", x=" + x +
+//                ", y=" + y +
+//                ", z=" + z +
+//                ", clusterMembersSize=" + clusterMembers.size() +
+//                ", cluster=" + cluster +
+//                '}';
     }
 }

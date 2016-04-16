@@ -11,15 +11,43 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import clustering.model.Node;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
+
+//    private static String LABEL = "Ruspini_Clustering_Result";
+//    private static int DATA_COUNT = 75;
+//    private static int DIMEN = 2;
+//    private static int CLASS = 4;
+
+    // Fossil
+//    private static String LABEL = "Fossil_Clustering_Result";
+//    private static int DATA_COUNT = 87;
+//    private static int DIMEN = 6;
+//    private static int CLASS = 3;
+
+    // Wine
+//    private static String LABEL = "Wine_Clustering_Result";
+//    private static int DATA_COUNT = 178;
+//    private static int DIMEN = 13;
+//    private static int CLASS = 3;
+
+    // Iris
+//    private static String LABEL = "Iris_Clustering_Result";
+//    private static int DATA_COUNT = 150;
+//    private static int DIMEN = 4;
+//    private static int CLASS = 3;
+
+    // Thyroid
+    private static String LABEL = "Thyroid_Clustering_Result";
+    private static int DATA_COUNT = 215;
+    private static int DIMEN = 5;
+    private static int CLASS = 3;
+
     @FXML
     public Button btOpenFile;
     @FXML
@@ -60,7 +88,7 @@ public class Controller implements Initializable {
                     StringBuilder sb = new StringBuilder();
                     String line = br.readLine();
 
-                    for (int i = 0; i < 1000; i++) {
+                    for (int i = 0; i < DATA_COUNT; i++) {
                         sb.append(line);
                         sb.append(System.lineSeparator());
                         line = br.readLine();
@@ -68,13 +96,18 @@ public class Controller implements Initializable {
                         List<Node> tmpClusterMember = new ArrayList<Node>();
 
                         String[] parts = line.split(",");
-                        Node tmpNode = new Node();
+                        Node tmpNode = new Node(DIMEN);
                         tmpNode.setId(i);
-                        tmpNode.setV(Integer.parseInt(parts[0]));
-                        tmpNode.setW(Integer.parseInt(parts[1]));
-                        tmpNode.setX(Integer.parseInt(parts[2]));
-                        tmpNode.setY(Integer.parseInt(parts[3]));
-                        tmpNode.setZ(Integer.parseInt(parts[4]));
+                        double[] tmpValue = new double[DIMEN];
+                        for (int j = 0; j < DIMEN; j++) {
+                            tmpValue[j] = Double.parseDouble(parts[j]);
+                        }
+                        tmpNode.setValue(tmpValue);
+//                        tmpNode.setV(Double.parseDouble(parts[0]));
+//                        tmpNode.setW(Double.parseDouble(parts[1]));
+//                        tmpNode.setX(Integer.parseInt(parts[2]));
+//                        tmpNode.setY(Integer.parseInt(parts[3]));
+//                        tmpNode.setZ(Integer.parseInt(parts[4]));
                         tmpNode.setCluster(0);
                         tmpClusterMember.add(tmpNode);
                         tmpNode.setClusterMembers(tmpClusterMember);
@@ -103,35 +136,49 @@ public class Controller implements Initializable {
 //                    System.out.println("Iteration: " + counter + "; Nodes: " + nodes.size());
                     double closestDistance = 999999;
                     int[] closestDstanceId = new int[2];
-                    double[] T = new double[5];
-                    double[] T1 = new double[5];
-                    double[] T2 = new double[5];
+                    double[] T = new double[DIMEN];
+                    double[] T1 = new double[DIMEN];
+                    double[] T2 = new double[DIMEN];
                     double D;
                     double a;
                     for (int i = 0; i < nodes.size(); i++) {
-                        T1[0] = nodes.get(i).getV();
-                        T1[1] = nodes.get(i).getW();
-                        T1[2] = nodes.get(i).getX();
-                        T1[3] = nodes.get(i).getY();
-                        T1[4] = nodes.get(i).getZ();
+                        for (int j = 0; j < DIMEN; j++) {
+                            T1[j] = nodes.get(i).getValue()[j];
+                        }
+//                        T1[0] = nodes.get(i).getV();
+//                        T1[1] = nodes.get(i).getW();
+//                        T1[2] = nodes.get(i).getX();
+//                        T1[3] = nodes.get(i).getY();
+//                        T1[4] = nodes.get(i).getZ();
                         for (int j = 0; j < nodes.size(); j++) {
-                            T2[0] = nodes.get(j).getV();
-                            T2[1] = nodes.get(j).getW();
-                            T2[2] = nodes.get(j).getX();
-                            T2[3] = nodes.get(j).getY();
-                            T2[4] = nodes.get(j).getZ();
+                            for (int l = 0; l < DIMEN; l++) {
+                                T2[l] = nodes.get(j).getValue()[l];
+                            }
+//                            T2[0] = nodes.get(j).getV();
+//                            T2[1] = nodes.get(j).getW();
+//                            T2[2] = nodes.get(j).getX();
+//                            T2[3] = nodes.get(j).getY();
+//                            T2[4] = nodes.get(j).getZ();
 
-                            T[0] = Math.abs(T1[0] - T2[0]);
-                            T[1] = Math.abs(T1[1] - T2[1]);
-                            T[2] = Math.abs(T1[2] - T2[2]);
-                            T[3] = Math.abs(T1[3] - T2[3]);
-                            T[4] = Math.abs(T1[4] - T2[4]);
+                            for (int l = 0; l < DIMEN; l++) {
+                                T[l] = Math.abs(T1[l] - T2[l]);
+                            }
+//                            T[0] = Math.abs(T1[0] - T2[0]);
+//                            T[1] = Math.abs(T1[1] - T2[1]);
+//                            T[2] = Math.abs(T1[2] - T2[2]);
+//                            T[3] = Math.abs(T1[3] - T2[3]);
+//                            T[4] = Math.abs(T1[4] - T2[4]);
 
-                            D = (T[0] * T[0]) +
-                                    (T[1] * T[1]) +
-                                    (T[2] * T[2]) +
-                                    (T[3] * T[3]) +
-                                    (T[4] * T[4]);
+                            D = 0;
+                            for (int l = 0; l < DIMEN; l++) {
+                                double tmp = T[l] * T[l];
+                                D += tmp;
+                            }
+//                            D = (T[0] * T[0]) +
+//                                    (T[1] * T[1]);
+//                                    (T[2] * T[2]) +
+//                                    (T[3] * T[3]) +
+//                                    (T[4] * T[4]);
 
                             a = Math.sqrt(D);
 
@@ -153,12 +200,17 @@ public class Controller implements Initializable {
                     tmpClusterMember.addAll(nodes.get(m).getClusterMembers());
                     tmpClusterMember.addAll(nodes.get(n).getClusterMembers());
 
-                    Node fuseNode = new Node();
-                    fuseNode.setV((nodes.get(m).getV() + nodes.get(n).getV()) / 2);
-                    fuseNode.setW((nodes.get(m).getW() + nodes.get(n).getW()) / 2);
-                    fuseNode.setX((nodes.get(m).getX() + nodes.get(n).getX()) / 2);
-                    fuseNode.setY((nodes.get(m).getY() + nodes.get(n).getY()) / 2);
-                    fuseNode.setZ((nodes.get(m).getZ() + nodes.get(n).getZ()) / 2);
+                    double[] tmpFuseNodeValue = new double[DIMEN];
+                    Node fuseNode = new Node(DIMEN);
+                    for (int l = 0; l < DIMEN; l++) {
+                        tmpFuseNodeValue[l] = (nodes.get(m).getValue()[l] + nodes.get(n).getValue()[l]) / 2;
+                    }
+                    fuseNode.setValue(tmpFuseNodeValue);
+//                    fuseNode.setV((nodes.get(m).getV() + nodes.get(n).getV()) / 2);
+//                    fuseNode.setW((nodes.get(m).getW() + nodes.get(n).getW()) / 2);
+//                    fuseNode.setX((nodes.get(m).getX() + nodes.get(n).getX()) / 2);
+//                    fuseNode.setY((nodes.get(m).getY() + nodes.get(n).getY()) / 2);
+//                    fuseNode.setZ((nodes.get(m).getZ() + nodes.get(n).getZ()) / 2);
                     fuseNode.setClusterMembers(tmpClusterMember);
                     fuseNode.setCluster(counter + 1);
 
@@ -187,9 +239,11 @@ public class Controller implements Initializable {
                     }
                 }
 
-                updateTable();
+//                updateTable();
+                saveToText(clusteredNodes);
 
-                countVariance();
+
+//                countVariance();
 
 
                 System.out.println("END");
@@ -197,15 +251,20 @@ public class Controller implements Initializable {
         });
     }
 
+/*
     private void updateTable() {
         tbvOutput.setEditable(true);
         tbvOutput.getColumns().removeAll();
         TableColumn columnId = new TableColumn("ID");
+
+        for(int i=0; i<DIMEN; i++){
+
+        }
         TableColumn columnV = new TableColumn("V");
         TableColumn columnW = new TableColumn("W");
-        TableColumn columnX = new TableColumn("X");
-        TableColumn columnY = new TableColumn("Y");
-        TableColumn columnZ = new TableColumn("Z");
+//        TableColumn columnX = new TableColumn("X");
+//        TableColumn columnY = new TableColumn("Y");
+//        TableColumn columnZ = new TableColumn("Z");
         TableColumn columnCluster = new TableColumn("Cluster");
 
         ObservableList<Node> clusterOutput = FXCollections.observableArrayList(clusteredNodes);
@@ -213,15 +272,40 @@ public class Controller implements Initializable {
         columnId.setCellValueFactory(new PropertyValueFactory<Node, Integer>("id"));
         columnV.setCellValueFactory(new PropertyValueFactory<Node, Double>("v"));
         columnW.setCellValueFactory(new PropertyValueFactory<Node, Double>("w"));
-        columnX.setCellValueFactory(new PropertyValueFactory<Node, Double>("x"));
-        columnY.setCellValueFactory(new PropertyValueFactory<Node, Double>("y"));
-        columnZ.setCellValueFactory(new PropertyValueFactory<Node, Double>("z"));
+//        columnX.setCellValueFactory(new PropertyValueFactory<Node, Double>("x"));
+//        columnY.setCellValueFactory(new PropertyValueFactory<Node, Double>("y"));
+//        columnZ.setCellValueFactory(new PropertyValueFactory<Node, Double>("z"));
         columnCluster.setCellValueFactory(new PropertyValueFactory<Node, Double>("cluster"));
 
         tbvOutput.setItems(clusterOutput);
-        tbvOutput.getColumns().addAll(columnId, columnV, columnW, columnX, columnY, columnZ, columnCluster);
+        tbvOutput.getColumns().addAll(columnId, columnV, columnW,
+//                columnX, columnY, columnZ,
+                columnCluster);
+
+    }
+*/
+
+    private void saveToText(List<Node> clusteredArrayList) {
+        try {
+            BufferedWriter out = new BufferedWriter(new FileWriter("D:\\" + LABEL + ".txt"));
+            for (int i = 0; i < clusteredArrayList.size(); i++) {
+                String str = "";
+                for (int j = 0; j < DIMEN; j++) {
+                    str += clusteredArrayList.get(i).getValue()[j] + ",";
+                }
+                str += clusteredArrayList.get(i).getCluster();
+                str += "\n";
+                out.write(str);
+//                out.write(clusteredArrayList.get(i).getV() + "," + clusteredArrayList.get(i).getW() + "," + clusteredArrayList.get(i).getCluster() + "\n");
+                out.newLine();
+            }
+            out.close();
+        } catch (IOException e) {
+        }
     }
 
+
+/*
     private void countVariance() {
         List<Double> Vc = new ArrayList<>();
         List<Double> avgV = new ArrayList<>();
@@ -329,4 +413,5 @@ public class Controller implements Initializable {
 
         lbVariance.setText(lbVariance.getText() + Vw / Vb);
     }
+*/
 }
